@@ -1,0 +1,23 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="All rights reserved"
+
+[[mods]]
+modId="parrotwars"
+version="${file.jarVersion}"
+displayName="Parrot Wars"
+description='''Армия попугаев против голубей. Командуй отрядом с помощью рации.'''
+
+[[dependencies.parrotwars]]
+    modId="forge"
+    mandatory=true
+    versionRange="[36,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.parrotwars]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5]"
+    ordering="NONE"
+    side="BOTH"

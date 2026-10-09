@@ -1,0 +1,11 @@
+{
+  "item.parrotwars.radio": "Command Radio",
+  "item.parrotwars.parrot_soldier_spawn_egg": "Parrot Soldier Spawn Egg",
+  "item.parrotwars.pigeon_spawn_egg": "Pigeon Spawn Egg",
+  "entity.parrotwars.parrot_soldier": "Parrot Soldier",
+  "entity.parrotwars.pigeon": "Pigeon",
+  "message.parrotwars.move": "Squad moving out (%s)",
+  "message.parrotwars.attack": "Squad attacking target (%s)",
+  "message.parrotwars.follow": "Squad following you (%s)",
+  "message.parrotwars.hold": "Squad holding position (%s)"
+}

@@ -1,0 +1,11 @@
+{
+  "item.parrotwars.radio": "Рация командира",
+  "item.parrotwars.parrot_soldier_spawn_egg": "Яйцо призыва: Попугай-солдат",
+  "item.parrotwars.pigeon_spawn_egg": "Яйцо призыва: Голубь",
+  "entity.parrotwars.parrot_soldier": "Попугай-солдат",
+  "entity.parrotwars.pigeon": "Голубь",
+  "message.parrotwars.move": "Отряд выдвигается (%s)",
+  "message.parrotwars.attack": "Отряд атакует цель (%s)",
+  "message.parrotwars.follow": "Отряд следует за вами (%s)",
+  "message.parrotwars.hold": "Отряд держит позицию (%s)"
+}

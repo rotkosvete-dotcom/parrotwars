@@ -11,7 +11,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 8
-      - name: Get Gradle wrapper from official Forge MDK
+      - name: Take wrapper and build.gradle from official Forge MDK
         shell: bash
         run: |
           curl -fL -o mdk.zip https://maven.minecraftforge.net/net/minecraftforge/forge/1.16.5-36.2.34/forge-1.16.5-36.2.34-mdk.zip
@@ -20,17 +20,21 @@ jobs:
           cp -r mdk/gradle gradle
           cp mdk/gradlew mdk/gradlew.bat .
           chmod +x gradlew
+          cp mdk/build.gradle build.gradle
+          sed -i "s/examplemod/parrotwars/g; s/com\.yourname\.modid/com.parrotwars/g; s/'modid'/'parrotwars-1.16.5'/g; s/mappings channel: '[a-z]*', version: '[^']*'/mappings channel: 'official', version: '1.16.5'/" build.gradle
+          grep -nE "mappings|archivesBase|group|version =" build.gradle
       - name: Build
         shell: bash
         run: ./gradlew build --stacktrace --console=plain 2>&1 | tee build.log
-      - name: Show log in summary
-        if: always()
+      - name: Report error text
+        if: failure()
         shell: bash
         run: |
-          echo '## build.log (last 120 lines)' >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          tail -n 120 build.log >> $GITHUB_STEP_SUMMARY || true
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          m=$(tail -n 45 build.log | cut -c1-220)
+          m="${m//'%'/'%25'}"
+          m="${m//$'\n'/'%0A'}"
+          m="${m//$'\r'/'%0D'}"
+          echo "::error title=BUILDLOG::${m:0:3500}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -38,3 +42,4 @@ jobs:
           path: |
             build/libs/*.jar
             build.log
+            

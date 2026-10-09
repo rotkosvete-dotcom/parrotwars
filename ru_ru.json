@@ -1,0 +1,18 @@
+{
+  "item.parrotwars.radio": "Рация командира",
+  "block.parrotwars.barracks": "Казарма",
+  "item.parrotwars.parrot_soldier_spawn_egg": "Яйцо призыва: Попугай-солдат",
+  "item.parrotwars.parrot_shooter_spawn_egg": "Яйцо призыва: Попугай-стрелок",
+  "item.parrotwars.parrot_medic_spawn_egg": "Яйцо призыва: Попугай-медик",
+  "item.parrotwars.pigeon_spawn_egg": "Яйцо призыва: Голубь",
+  "entity.parrotwars.parrot_soldier": "Попугай-солдат",
+  "entity.parrotwars.parrot_shooter": "Попугай-стрелок",
+  "entity.parrotwars.parrot_medic": "Попугай-медик",
+  "entity.parrotwars.pigeon": "Голубь",
+  "message.parrotwars.move": "Отряд выдвигается (%s)",
+  "message.parrotwars.attack": "Отряд атакует цель (%s)",
+  "message.parrotwars.follow": "Отряд следует за вами (%s)",
+  "message.parrotwars.hold": "Отряд держит позицию (%s)",
+  "message.parrotwars.barracks_help": "ПКМ: 5 семян - солдат, 3 стрелы - стрелок, 1 золотая морковь - медик",
+  "message.parrotwars.barracks_need": "Не хватает предметов, нужно: %s"
+}

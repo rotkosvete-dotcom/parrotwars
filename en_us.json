@@ -1,0 +1,18 @@
+{
+  "item.parrotwars.radio": "Command Radio",
+  "block.parrotwars.barracks": "Barracks",
+  "item.parrotwars.parrot_soldier_spawn_egg": "Parrot Soldier Spawn Egg",
+  "item.parrotwars.parrot_shooter_spawn_egg": "Parrot Shooter Spawn Egg",
+  "item.parrotwars.parrot_medic_spawn_egg": "Parrot Medic Spawn Egg",
+  "item.parrotwars.pigeon_spawn_egg": "Pigeon Spawn Egg",
+  "entity.parrotwars.parrot_soldier": "Parrot Soldier",
+  "entity.parrotwars.parrot_shooter": "Parrot Shooter",
+  "entity.parrotwars.parrot_medic": "Parrot Medic",
+  "entity.parrotwars.pigeon": "Pigeon",
+  "message.parrotwars.move": "Squad moving out (%s)",
+  "message.parrotwars.attack": "Squad attacking target (%s)",
+  "message.parrotwars.follow": "Squad following you (%s)",
+  "message.parrotwars.hold": "Squad holding position (%s)",
+  "message.parrotwars.barracks_help": "Use: 5 seeds = soldier, 3 arrows = shooter, 1 golden carrot = medic",
+  "message.parrotwars.barracks_need": "Not enough items, need: %s"
+}

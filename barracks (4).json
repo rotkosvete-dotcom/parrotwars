@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["BBB", "BHB", "BBB"],
+  "key": {
+    "B": { "item": "minecraft:bricks" },
+    "H": { "item": "minecraft:hay_block" }
+  },
+  "result": { "item": "parrotwars:barracks" }
+}

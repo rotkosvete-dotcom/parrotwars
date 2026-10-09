@@ -11,11 +11,22 @@ jobs:
         with:
           distribution: temurin
           java-version: 8
-      - uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: 5.6.4
-      - run: gradle build
+      - name: Get Gradle wrapper from official Forge MDK
+        shell: bash
+        run: |
+          curl -fL -o mdk.zip https://maven.minecraftforge.net/net/minecraftforge/forge/1.16.5-36.2.34/forge-1.16.5-36.2.34-mdk.zip
+          unzip -q mdk.zip -d mdk
+          rm -rf gradle
+          cp -r mdk/gradle gradle
+          cp mdk/gradlew mdk/gradlew.bat .
+          chmod +x gradlew
+      - name: Build
+        shell: bash
+        run: ./gradlew build --stacktrace --console=plain 2>&1 | tee build.log
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: parrotwars-jar
-          path: build/libs/*.jar
+          path: |
+            build/libs/*.jar
+            build.log

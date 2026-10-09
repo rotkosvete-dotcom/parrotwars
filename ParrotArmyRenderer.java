@@ -2,18 +2,20 @@ package com.parrotwars.client;
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.model.ParrotModel;
 import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
-/** Рендер на базе ванильной модели попугая, с другой текстурой. */
-public class ParrotArmyRenderer extends MobRenderer<ParrotEntity, ParrotModel> {
+/** Рендер на базе ванильной модели попугая: своя текстура и (по желанию) каска. */
+public class ParrotArmyRenderer extends MobRenderer<ParrotEntity, ArmyParrotModel> {
     private final ResourceLocation texture;
 
-    public ParrotArmyRenderer(EntityRendererManager manager, ResourceLocation texture) {
-        super(manager, new ParrotModel(), 0.3F);
+    public ParrotArmyRenderer(EntityRendererManager manager, ResourceLocation texture, ResourceLocation helmetTexture) {
+        super(manager, new ArmyParrotModel(), 0.3F);
         this.texture = texture;
+        if (helmetTexture != null) {
+            this.addLayer(new HelmetLayer(this, helmetTexture));
+        }
     }
 
     @Override

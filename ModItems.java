@@ -17,6 +17,12 @@ public class ModItems {
     public static final RegistryObject<Item> RADIO = ITEMS.register("radio",
             () -> new RadioItem(new Item.Properties().tab(ItemGroup.TAB_MISC).stacksTo(1)));
 
+    public static final RegistryObject<Item> PARROT_FEATHER = ITEMS.register("parrot_feather",
+            () -> new ParrotFeatherItem(new Item.Properties().tab(ItemGroup.TAB_MISC).stacksTo(1)));
+
+    public static final RegistryObject<Item> COMMAND_MAP = ITEMS.register("command_map",
+            () -> new StrategyMapItem(new Item.Properties().tab(ItemGroup.TAB_MISC).stacksTo(1)));
+
     public static final RegistryObject<Item> BARRACKS = ITEMS.register("barracks",
             () -> new BlockItem(ModBlocks.BARRACKS.get(), new Item.Properties().tab(ItemGroup.TAB_MISC)));
 

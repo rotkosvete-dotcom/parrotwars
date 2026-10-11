@@ -1,6 +1,8 @@
 package com.parrotwars;
 
 import com.parrotwars.block.ModBlocks;
+import com.parrotwars.effect.ModEffects;
+import com.parrotwars.network.ModNetwork;
 import com.parrotwars.entity.*;
 import com.parrotwars.item.ModItems;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
@@ -16,12 +18,14 @@ public class ParrotWars {
     public ParrotWars() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         ModBlocks.BLOCKS.register(bus);
+        ModEffects.EFFECTS.register(bus);
         ModEntities.ENTITIES.register(bus);
         ModItems.ITEMS.register(bus);
         bus.addListener(this::commonSetup);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {
+        ModNetwork.register();
         event.enqueueWork(() -> {
             GlobalEntityTypeAttributes.put(ModEntities.PARROT_SOLDIER.get(), ParrotSoldierEntity.createSoldierAttributes().build());
             GlobalEntityTypeAttributes.put(ModEntities.PARROT_SHOOTER.get(), ParrotShooterEntity.createShooterAttributes().build());

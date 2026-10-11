@@ -26,6 +26,7 @@ jobs:
           for f in sorted(glob.glob('*')):
               if not os.path.isfile(f):
                   continue
+              base = re.sub(r' \(\d+\)', '', f)
               if f.endswith('.java'):
                   pkg = re.search(r'^package\s+([\w.]+);', open(f, encoding='utf8').read(), re.M).group(1)
                   put(f, 'src/main/java/' + pkg.replace('.', '/') + '/' + f)
@@ -42,21 +43,23 @@ jobs:
                       j = json.load(open(f, encoding='utf8'))
                   except Exception:
                       continue
-                  p = j.get('parent')
+                  p = j.get('parent', '')
+                  t = j.get('type', '')
                   if 'variants' in j:
                       put(f, A + '/blockstates/barracks.json')
-                  elif j.get('type') == 'minecraft:block':
+                  elif t == 'minecraft:block':
                       put(f, D + '/loot_tables/blocks/barracks.json')
-                  elif j.get('type') == 'minecraft:crafting_shaped':
-                      put(f, D + '/recipes/' + j['result']['item'].split(':')[1] + '.json')
+                  elif t.startswith('minecraft:crafting_'):
+                      res = j['result']['item'] if isinstance(j['result'], dict) else j['result']
+                      put(f, D + '/recipes/' + res.split(':')[1] + '.json')
                   elif p == 'minecraft:block/cube_all':
                       put(f, A + '/models/block/barracks.json')
                   elif p == 'parrotwars:block/barracks':
                       put(f, A + '/models/item/barracks.json')
-                  elif p == 'item/generated':
-                      put(f, A + '/models/item/radio.json')
                   elif p == 'item/template_spawn_egg':
-                      put(f, A + '/models/item/' + re.sub(r' \(\d+\)', '', f))
+                      put(f, A + '/models/item/' + base)
+                  elif p in ('item/generated', 'minecraft:item/generated', 'item/handheld'):
+                      put(f, A + '/models/item/' + re.sub(r'(_item_model)?\.json$', '', base) + '.json')
           PY
       - name: Take wrapper and build.gradle from official Forge MDK
         shell: bash

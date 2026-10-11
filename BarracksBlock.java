@@ -1,10 +1,11 @@
 package com.parrotwars.block;
 
 import com.parrotwars.entity.ModEntities;
-import com.parrotwars.entity.ParrotSoldierEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -19,9 +20,11 @@ import net.minecraft.world.World;
 
 /**
  * Казарма. ПКМ предметом в руке:
- *  5 семян пшеницы  -> попугай-солдат
- *  3 стрелы         -> попугай-стрелок
+ *  5 семян пшеницы   -> попугай-солдат
+ *  3 стрелы          -> попугай-стрелок
  *  1 золотая морковь -> попугай-медик
+ *  8 железных слитков -> танк
+ *  1 динамит (TNT)   -> артиллерия
  */
 public class BarracksBlock extends Block {
 
@@ -33,7 +36,7 @@ public class BarracksBlock extends Block {
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
                                 BlockRayTraceResult hit) {
         ItemStack stack = player.getItemInHand(hand);
-        EntityType<? extends ParrotSoldierEntity> type = null;
+        EntityType<? extends MobEntity> type = null;
         int cost = 0;
         if (stack.getItem() == Items.WHEAT_SEEDS) {
             type = ModEntities.PARROT_SOLDIER.get();
@@ -43,6 +46,12 @@ public class BarracksBlock extends Block {
             cost = 3;
         } else if (stack.getItem() == Items.GOLDEN_CARROT) {
             type = ModEntities.PARROT_MEDIC.get();
+            cost = 1;
+        } else if (stack.getItem() == Items.IRON_INGOT) {
+            type = ModEntities.PARROT_TANK.get();
+            cost = 8;
+        } else if (stack.getItem() == Items.TNT) {
+            type = ModEntities.PARROT_ARTILLERY.get();
             cost = 1;
         }
 
@@ -64,11 +73,13 @@ public class BarracksBlock extends Block {
             if (!player.abilities.instabuild) {
                 stack.shrink(cost);
             }
-            ParrotSoldierEntity parrot = type.create(world);
-            if (parrot != null) {
-                parrot.moveTo(pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, world.random.nextFloat() * 360.0F, 0.0F);
-                parrot.tame(player);
-                world.addFreshEntity(parrot);
+            MobEntity unit = type.create(world);
+            if (unit != null) {
+                unit.moveTo(pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, world.random.nextFloat() * 360.0F, 0.0F);
+                if (unit instanceof TameableEntity) {
+                    ((TameableEntity) unit).tame(player);
+                }
+                world.addFreshEntity(unit);
                 world.playSound(null, pos, SoundEvents.PARROT_AMBIENT, SoundCategory.NEUTRAL, 1.0F, 1.0F);
             }
         }

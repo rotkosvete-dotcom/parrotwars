@@ -34,15 +34,6 @@ public class ParrotShooterEntity extends ParrotSoldierEntity implements IRangedA
 
     @Override
     public void performRangedAttack(LivingEntity target, float distanceFactor) {
-        SeedArrowEntity arrow = new SeedArrowEntity(this.level, this);
-        double dx = target.getX() - this.getX();
-        double dy = target.getY(0.33D) - arrow.getY();
-        double dz = target.getZ() - this.getZ();
-        double h = MathHelper.sqrt(dx * dx + dz * dz);
-        arrow.shoot(dx, dy + h * 0.2D, dz, 1.6F, 6.0F);
-        arrow.setBaseDamage(2.0D);
-        arrow.pickup = AbstractArrowEntity.PickupStatus.DISALLOWED;
-        this.playSound(SoundEvents.ARROW_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.level.addFreshEntity(arrow);
+        SeedArrowEntity.fire(this, target, 2.0D, 6.0F);
     }
 }

@@ -13,8 +13,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-/** Враг: голубь-солдат. Нападает на игроков и приручённых попугаев. */
-public class PigeonEntity extends ParrotEntity {
+/** Враг: голубь-солдат. Нападает на игроков и юнитов армии попугаев. */
+public class PigeonEntity extends ParrotEntity implements EnemyUnit {
 
     public PigeonEntity(EntityType<? extends PigeonEntity> type, World world) {
         super(type, world);
@@ -37,7 +37,7 @@ public class PigeonEntity extends ParrotEntity {
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, ParrotSoldierEntity.class, true));
+        this.targetSelector.addGoal(3, new ScanTargetGoal(this, e -> e instanceof ArmyUnit, 20.0D));
     }
 
     @Override

@@ -13,6 +13,18 @@
   "message.parrotwars.attack": "Отряд атакует цель (%s)",
   "message.parrotwars.follow": "Отряд следует за вами (%s)",
   "message.parrotwars.hold": "Отряд держит позицию (%s)",
-  "message.parrotwars.barracks_help": "ПКМ: 5 семян - солдат, 3 стрелы - стрелок, 1 золотая морковь - медик",
-  "message.parrotwars.barracks_need": "Не хватает предметов, нужно: %s"
+  "message.parrotwars.barracks_help": "Семена x5 - солдат, стрелы x3 - стрелок, зол. морковь - медик, железо x8 - танк, TNT - артиллерия",
+  "message.parrotwars.barracks_need": "Не хватает предметов, нужно: %s",
+  "item.parrotwars.parrot_tank_spawn_egg": "Яйцо призыва: Танк попугаев",
+  "item.parrotwars.parrot_artillery_spawn_egg": "Яйцо призыва: Артиллерия попугаев",
+  "item.parrotwars.pigeon_bomber_spawn_egg": "Яйцо призыва: Голубь-бомбардировщик",
+  "item.parrotwars.pigeon_sniper_spawn_egg": "Яйцо призыва: Голубь-снайпер",
+  "item.parrotwars.pigeon_tank_spawn_egg": "Яйцо призыва: Танк голубей",
+  "item.parrotwars.pigeon_artillery_spawn_egg": "Яйцо призыва: Артиллерия голубей",
+  "entity.parrotwars.parrot_tank": "Танк попугаев",
+  "entity.parrotwars.parrot_artillery": "Артиллерия попугаев",
+  "entity.parrotwars.pigeon_bomber": "Голубь-бомбардировщик",
+  "entity.parrotwars.pigeon_sniper": "Голубь-снайпер",
+  "entity.parrotwars.pigeon_tank": "Танк голубей",
+  "entity.parrotwars.pigeon_artillery": "Артиллерия голубей"
 }

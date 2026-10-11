@@ -26,7 +26,13 @@ public class ParrotWars {
             GlobalEntityTypeAttributes.put(ModEntities.PARROT_SOLDIER.get(), ParrotSoldierEntity.createSoldierAttributes().build());
             GlobalEntityTypeAttributes.put(ModEntities.PARROT_SHOOTER.get(), ParrotShooterEntity.createShooterAttributes().build());
             GlobalEntityTypeAttributes.put(ModEntities.PARROT_MEDIC.get(), ParrotMedicEntity.createMedicAttributes().build());
+            GlobalEntityTypeAttributes.put(ModEntities.PARROT_TANK.get(), WarVehicleEntity.createTankAttributes().build());
+            GlobalEntityTypeAttributes.put(ModEntities.PARROT_ARTILLERY.get(), WarVehicleEntity.createArtilleryAttributes().build());
             GlobalEntityTypeAttributes.put(ModEntities.PIGEON.get(), PigeonEntity.createPigeonAttributes().build());
+            GlobalEntityTypeAttributes.put(ModEntities.PIGEON_BOMBER.get(), PigeonBomberEntity.createBomberAttributes().build());
+            GlobalEntityTypeAttributes.put(ModEntities.PIGEON_SNIPER.get(), PigeonSniperEntity.createSniperAttributes().build());
+            GlobalEntityTypeAttributes.put(ModEntities.PIGEON_TANK.get(), WarVehicleEntity.createTankAttributes().build());
+            GlobalEntityTypeAttributes.put(ModEntities.PIGEON_ARTILLERY.get(), WarVehicleEntity.createArtilleryAttributes().build());
         });
     }
 }

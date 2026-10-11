@@ -32,7 +32,31 @@ public class ModItems {
             () -> new ForgeSpawnEggItem(ModEntities.PARROT_MEDIC, 0xFACC15, 0xFFFFFF,
                     new Item.Properties().tab(ItemGroup.TAB_MISC)));
 
+    public static final RegistryObject<Item> PARROT_TANK_SPAWN_EGG = ITEMS.register("parrot_tank_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.PARROT_TANK, 0x4B5320, 0x1F2937,
+                    new Item.Properties().tab(ItemGroup.TAB_MISC)));
+
+    public static final RegistryObject<Item> PARROT_ARTILLERY_SPAWN_EGG = ITEMS.register("parrot_artillery_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.PARROT_ARTILLERY, 0x4B5320, 0xB45309,
+                    new Item.Properties().tab(ItemGroup.TAB_MISC)));
+
     public static final RegistryObject<Item> PIGEON_SPAWN_EGG = ITEMS.register("pigeon_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.PIGEON, 0x9CA3AF, 0x4B5563,
+                    new Item.Properties().tab(ItemGroup.TAB_MISC)));
+
+    public static final RegistryObject<Item> PIGEON_BOMBER_SPAWN_EGG = ITEMS.register("pigeon_bomber_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.PIGEON_BOMBER, 0x9CA3AF, 0xDC2626,
+                    new Item.Properties().tab(ItemGroup.TAB_MISC)));
+
+    public static final RegistryObject<Item> PIGEON_SNIPER_SPAWN_EGG = ITEMS.register("pigeon_sniper_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.PIGEON_SNIPER, 0x9CA3AF, 0x111827,
+                    new Item.Properties().tab(ItemGroup.TAB_MISC)));
+
+    public static final RegistryObject<Item> PIGEON_TANK_SPAWN_EGG = ITEMS.register("pigeon_tank_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.PIGEON_TANK, 0x6B7280, 0x1F2937,
+                    new Item.Properties().tab(ItemGroup.TAB_MISC)));
+
+    public static final RegistryObject<Item> PIGEON_ARTILLERY_SPAWN_EGG = ITEMS.register("pigeon_artillery_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.PIGEON_ARTILLERY, 0x6B7280, 0xB45309,
                     new Item.Properties().tab(ItemGroup.TAB_MISC)));
 }

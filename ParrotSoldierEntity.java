@@ -22,7 +22,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 /** Попугай-солдат. Приручается семенами пшеницы, слушается рацию. */
-public class ParrotSoldierEntity extends ParrotEntity {
+public class ParrotSoldierEntity extends ParrotEntity implements ArmyUnit {
 
     public enum Order { FOLLOW, HOLD, MOVE }
 
@@ -61,7 +61,7 @@ public class ParrotSoldierEntity extends ParrotEntity {
     protected void registerTargetGoals() {
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
-        this.targetSelector.addGoal(3, new HuntPigeonsGoal(this));
+        this.targetSelector.addGoal(3, new ScanTargetGoal(this, e -> e instanceof EnemyUnit, 20.0D));
     }
 
     /** Вступает ли юнит в бой (медик - нет). */
@@ -80,8 +80,7 @@ public class ParrotSoldierEntity extends ParrotEntity {
         boolean result = super.hurt(source, amount);
         if (result && !this.level.isClientSide && canFight()) {
             Entity attacker = source.getEntity();
-            if (attacker instanceof LivingEntity && !isOwnedBy((LivingEntity) attacker)
-                    && !(attacker instanceof ParrotSoldierEntity)) {
+            if (attacker instanceof LivingEntity && !Teams.isFriendly(this, attacker)) {
                 this.setTarget((LivingEntity) attacker);
             }
         }
@@ -106,23 +105,32 @@ public class ParrotSoldierEntity extends ParrotEntity {
 
     // ---------- Приказы ----------
 
+    @Override
+    public boolean isOwnedByPlayer(PlayerEntity player) {
+        return this.isOwnedBy(player);
+    }
+
+    @Override
     public void orderFollow() {
         this.order = Order.FOLLOW;
         this.moveTarget = null;
     }
 
+    @Override
     public void orderHold() {
         this.order = Order.HOLD;
         this.moveTarget = null;
         this.getNavigation().stop();
     }
 
+    @Override
     public void orderMove(BlockPos pos) {
         this.order = Order.MOVE;
         this.moveTarget = pos;
         this.setTarget(null);
     }
 
+    @Override
     public void orderAttack(LivingEntity target) {
         this.setTarget(target);
     }
@@ -153,46 +161,6 @@ public class ParrotSoldierEntity extends ParrotEntity {
     }
 
     // ---------- Цели ИИ ----------
-
-    /** Сам ищет ближайшего голубя в радиусе и нападает. */
-    static class HuntPigeonsGoal extends Goal {
-        private final ParrotSoldierEntity soldier;
-        private PigeonEntity found;
-
-        HuntPigeonsGoal(ParrotSoldierEntity soldier) {
-            this.soldier = soldier;
-            this.setFlags(EnumSet.of(Flag.TARGET));
-        }
-
-        @Override
-        public boolean canUse() {
-            LivingEntity current = soldier.getTarget();
-            if (current != null && current.isAlive()) return false;
-            if (soldier.getRandom().nextInt(10) != 0) return false;
-            List<PigeonEntity> list = soldier.level.getEntitiesOfClass(PigeonEntity.class,
-                    soldier.getBoundingBox().inflate(20.0D, 10.0D, 20.0D), e -> e.isAlive());
-            found = null;
-            double best = Double.MAX_VALUE;
-            for (PigeonEntity p : list) {
-                double d = soldier.distanceToSqr(p);
-                if (d < best) {
-                    best = d;
-                    found = p;
-                }
-            }
-            return found != null;
-        }
-
-        @Override
-        public boolean canContinueToUse() {
-            return false;
-        }
-
-        @Override
-        public void start() {
-            soldier.setTarget(found);
-        }
-    }
 
     static class MoveOrderGoal extends Goal {
         private final ParrotSoldierEntity mob;

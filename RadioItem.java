@@ -1,6 +1,6 @@
 package com.parrotwars.item;
 
-import com.parrotwars.entity.ParrotSoldierEntity;
+import com.parrotwars.entity.ArmyUnit;
 import java.util.List;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,7 +15,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 /**
- * Рация:
+ * Рация (командует всей армией: попугаи, танки, артиллерия):
  *  ПКМ по блоку  - отряд идёт туда
  *  ПКМ по мобу   - отряд атакует цель
  *  ПКМ в воздух  - отряд следует за тобой
@@ -28,9 +28,9 @@ public class RadioItem extends Item {
         super(props);
     }
 
-    private static List<ParrotSoldierEntity> getSoldiers(PlayerEntity player) {
-        return player.level.getEntitiesOfClass(ParrotSoldierEntity.class,
-                player.getBoundingBox().inflate(RANGE), e -> e.isOwnedBy(player));
+    private static List<LivingEntity> getUnits(PlayerEntity player) {
+        return player.level.getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(RANGE),
+                e -> e instanceof ArmyUnit && ((ArmyUnit) e).isOwnedByPlayer(player));
     }
 
     @Override
@@ -40,8 +40,8 @@ public class RadioItem extends Item {
         if (player == null) return ActionResultType.PASS;
         if (!world.isClientSide) {
             BlockPos pos = ctx.getClickedPos().above();
-            List<ParrotSoldierEntity> list = getSoldiers(player);
-            list.forEach(s -> s.orderMove(pos));
+            List<LivingEntity> list = getUnits(player);
+            for (LivingEntity e : list) ((ArmyUnit) e).orderMove(pos);
             player.displayClientMessage(new TranslationTextComponent("message.parrotwars.move", list.size()), true);
         }
         return ActionResultType.sidedSuccess(world.isClientSide);
@@ -51,12 +51,12 @@ public class RadioItem extends Item {
     public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!world.isClientSide) {
-            List<ParrotSoldierEntity> list = getSoldiers(player);
+            List<LivingEntity> list = getUnits(player);
             if (player.isShiftKeyDown()) {
-                list.forEach(ParrotSoldierEntity::orderHold);
+                for (LivingEntity e : list) ((ArmyUnit) e).orderHold();
                 player.displayClientMessage(new TranslationTextComponent("message.parrotwars.hold", list.size()), true);
             } else {
-                list.forEach(ParrotSoldierEntity::orderFollow);
+                for (LivingEntity e : list) ((ArmyUnit) e).orderFollow();
                 player.displayClientMessage(new TranslationTextComponent("message.parrotwars.follow", list.size()), true);
             }
         }
@@ -65,12 +65,12 @@ public class RadioItem extends Item {
 
     @Override
     public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity player, LivingEntity target, Hand hand) {
-        if (target instanceof ParrotSoldierEntity && ((ParrotSoldierEntity) target).isOwnedBy(player)) {
+        if (target instanceof ArmyUnit && ((ArmyUnit) target).isOwnedByPlayer(player)) {
             return ActionResultType.PASS;
         }
         if (!player.level.isClientSide) {
-            List<ParrotSoldierEntity> list = getSoldiers(player);
-            list.forEach(s -> s.orderAttack(target));
+            List<LivingEntity> list = getUnits(player);
+            for (LivingEntity e : list) ((ArmyUnit) e).orderAttack(target);
             player.displayClientMessage(new TranslationTextComponent("message.parrotwars.attack", list.size()), true);
         }
         return ActionResultType.sidedSuccess(player.level.isClientSide);

@@ -11,6 +11,53 @@ jobs:
         with:
           distribution: temurin
           java-version: 8
+      - name: Put flat-uploaded files into src folders
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, re, json, shutil, glob
+          R = 'src/main/resources'
+          A = R + '/assets/parrotwars'
+          D = R + '/data/parrotwars'
+          def put(src, dst):
+              os.makedirs(os.path.dirname(dst), exist_ok=True)
+              shutil.copyfile(src, dst)
+              print(src, '->', dst)
+          for f in sorted(glob.glob('*')):
+              if not os.path.isfile(f):
+                  continue
+              if f.endswith('.java'):
+                  pkg = re.search(r'^package\s+([\w.]+);', open(f, encoding='utf8').read(), re.M).group(1)
+                  put(f, 'src/main/java/' + pkg.replace('.', '/') + '/' + f)
+              elif f in ('ru_ru.json', 'en_us.json'):
+                  put(f, A + '/lang/' + f)
+              elif f == 'mods.toml':
+                  put(f, R + '/META-INF/mods.toml')
+              elif f == 'pack.mcmeta':
+                  put(f, R + '/pack.mcmeta')
+              elif f.endswith('.png'):
+                  put(f, A + '/textures/entity/' + f)
+              elif f.endswith('.json'):
+                  try:
+                      j = json.load(open(f, encoding='utf8'))
+                  except Exception:
+                      continue
+                  p = j.get('parent')
+                  if 'variants' in j:
+                      put(f, A + '/blockstates/barracks.json')
+                  elif j.get('type') == 'minecraft:block':
+                      put(f, D + '/loot_tables/blocks/barracks.json')
+                  elif j.get('type') == 'minecraft:crafting_shaped':
+                      put(f, D + '/recipes/' + j['result']['item'].split(':')[1] + '.json')
+                  elif p == 'minecraft:block/cube_all':
+                      put(f, A + '/models/block/barracks.json')
+                  elif p == 'parrotwars:block/barracks':
+                      put(f, A + '/models/item/barracks.json')
+                  elif p == 'item/generated':
+                      put(f, A + '/models/item/radio.json')
+                  elif p == 'item/template_spawn_egg':
+                      put(f, A + '/models/item/' + re.sub(r' \(\d+\)', '', f))
+          PY
       - name: Take wrapper and build.gradle from official Forge MDK
         shell: bash
         run: |
@@ -22,7 +69,6 @@ jobs:
           chmod +x gradlew
           cp mdk/build.gradle build.gradle
           sed -i "s/examplemod/parrotwars/g; s/com\.yourname\.modid/com.parrotwars/g; s/'modid'/'parrotwars-1.16.5'/g; s/mappings channel: '[a-z]*', version: '[^']*'/mappings channel: 'official', version: '1.16.5'/" build.gradle
-          grep -nE "mappings|archivesBase|group|version =" build.gradle
       - name: Build
         shell: bash
         run: ./gradlew build --stacktrace --console=plain 2>&1 | tee build.log

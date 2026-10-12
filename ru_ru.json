@@ -69,5 +69,6 @@
   "message.parrotwars.citizen_defected": "Гражданин перешёл на твою сторону!",
   "message.parrotwars.citizen_loyal": "Он ещё верен своему правителю",
   "message.parrotwars.rally_support": "Митинг в твою поддержку! Народ даёт тебе силы",
-  "message.parrotwars.rally_protest": "Митинг протеста! Народ недоволен тобой"
+  "message.parrotwars.rally_protest": "Митинг протеста! Народ недоволен тобой",
+  "screen.parrotwars.enemy_where": "Столица: X %s, Z %s (%s блоков, %s)"
 }

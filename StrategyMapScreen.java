@@ -514,6 +514,23 @@ public class StrategyMapScreen extends Screen {
                 int lx = MathHelper.clamp(sx - w / 2, mapX, Math.max(mapX, mapX + size - w));
                 int ly = Math.max(sy - 14, mapY);
                 drawString(ms, this.font, v.name, lx, ly, color);
+            } else if (v.enemy) {
+                double mcx = mapX + size / 2.0D;
+                double mcy = mapY + size / 2.0D;
+                double dx = sx - mcx;
+                double dy = sy - mcy;
+                double len = Math.max(Math.abs(dx), Math.abs(dy));
+                if (len > 0.0D) {
+                    double k = (size / 2.0D - 6.0D) / len;
+                    int ex = (int) (mcx + dx * k);
+                    int ey = (int) (mcy + dy * k);
+                    fill(ms, ex - 5, ey - 5, ex + 5, ey + 5, 0xFFFFFFFF);
+                    fill(ms, ex - 4, ey - 4, ex + 4, ey + 4, color);
+                    int w = this.font.width(v.name);
+                    int lx = MathHelper.clamp(ex - w / 2, mapX, Math.max(mapX, mapX + size - w));
+                    int ly = ey < mcy ? ey + 8 : ey - 16;
+                    drawString(ms, this.font, v.name, lx, ly, color);
+                }
             }
         }
     }
@@ -530,6 +547,7 @@ public class StrategyMapScreen extends Screen {
         int approval = -1;
         int houses = 0;
         String enemyName = null;
+        long enemyCap = 0L;
         for (CountrySyncPacket.View v : ClientHooks.views) {
             if (v.mine) {
                 myCountry = v.name;
@@ -539,21 +557,33 @@ public class StrategyMapScreen extends Screen {
                 houses = v.houses.length;
             } else if (v.enemy) {
                 enemyName = v.name;
+                enemyCap = v.capital;
             }
         }
-        int y = this.height - 76;
+        int y = this.height - 88;
         drawString(ms, this.font, new TranslationTextComponent("screen.parrotwars.my_country", myCountry, chunks),
                 bx, y, 0xFFD700);
         drawString(ms, this.font, new TranslationTextComponent("screen.parrotwars.citizens", houses, citizens,
                 approval < 0 ? "-" : approval + "%"), bx, y + 12, 0xCCFFCC);
         if (enemyName != null) {
+            ChunkPos ecp = new ChunkPos(enemyCap);
+            int ex = ecp.x * 16 + 8;
+            int ez = ecp.z * 16 + 8;
+            PlayerEntity me = Minecraft.getInstance().player;
+            double ddx = me == null ? 0.0D : ex - me.getX();
+            double ddz = me == null ? 0.0D : ez - me.getZ();
+            int dist = (int) Math.sqrt(ddx * ddx + ddz * ddz);
+            String[] dirs = {"восток", "юго-восток", "юг", "юго-запад", "запад", "северо-запад", "север", "северо-восток"};
+            int idx = (((int) Math.round(Math.atan2(ddz, ddx) / (Math.PI / 4.0D))) + 8) % 8;
             drawString(ms, this.font, new TranslationTextComponent("screen.parrotwars.enemy_country", enemyName),
                     bx, y + 24, 0xFF8888);
+            drawString(ms, this.font, new TranslationTextComponent("screen.parrotwars.enemy_where", ex, ez, dist, dirs[idx]),
+                    bx, y + 36, 0xFFAAAA);
         }
         if (inMap(mouseX, mouseY)) {
             int wx = MathHelper.floor(toWorldX(mouseX));
             int wz = MathHelper.floor(toWorldZ(mouseY));
-            drawString(ms, this.font, "X: " + wx + "  Z: " + wz, bx, y + 38, 0xCCCCCC);
+            drawString(ms, this.font, "X: " + wx + "  Z: " + wz, bx, y + 50, 0xCCCCCC);
         }
         String hint = territoryMode
                 ? new TranslationTextComponent("screen.parrotwars.hint_territory").getString()

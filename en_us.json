@@ -69,5 +69,6 @@
   "message.parrotwars.citizen_defected": "The citizen switched to your side!",
   "message.parrotwars.citizen_loyal": "Still loyal to their ruler",
   "message.parrotwars.rally_support": "A rally supports you! The people give you strength",
-  "message.parrotwars.rally_protest": "A protest rally! The people are unhappy with you"
+  "message.parrotwars.rally_protest": "A protest rally! The people are unhappy with you",
+  "screen.parrotwars.enemy_where": "Capital: X %s, Z %s (%s blocks, %s)"
 }

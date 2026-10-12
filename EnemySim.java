@@ -79,8 +79,8 @@ public class EnemySim {
 
     private static void garrison(ServerWorld world, CountryManager.Country enemy) {
         ChunkPos cp = new ChunkPos(enemy.capital);
-        int cx = cp.getMiddleBlockX();
-        int cz = cp.getMiddleBlockZ();
+        int cx = (cp.x * 16 + 8);
+        int cz = (cp.z * 16 + 8);
         if (!world.hasChunkAt(new BlockPos(cx, 64, cz))) {
             return;
         }
@@ -126,8 +126,8 @@ public class EnemySim {
                 continue;
             }
             ChunkPos mc = new ChunkPos(mine.capital);
-            int tx = mc.getMiddleBlockX();
-            int tz = mc.getMiddleBlockZ();
+            int tx = (mc.x * 16 + 8);
+            int tz = (mc.z * 16 + 8);
             double pdx = p.getX() - tx;
             double pdz = p.getZ() - tz;
             if (pdx * pdx + pdz * pdz > 160.0D * 160.0D) {

@@ -505,8 +505,8 @@ public class StrategyMapScreen extends Screen {
                 }
             }
             ChunkPos cp = new ChunkPos(v.capital);
-            int sx = toScreenX(cp.getMiddleBlockX());
-            int sy = toScreenY(cp.getMiddleBlockZ());
+            int sx = toScreenX((cp.x * 16 + 8));
+            int sy = toScreenY((cp.z * 16 + 8));
             if (inMap(sx, sy)) {
                 fill(ms, sx - 4, sy - 4, sx + 4, sy + 4, 0xFFFFFFFF);
                 fill(ms, sx - 3, sy - 3, sx + 3, sy + 3, color);

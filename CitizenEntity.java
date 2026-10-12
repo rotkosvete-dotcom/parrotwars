@@ -210,8 +210,8 @@ public abstract class CitizenEntity extends ParrotEntity {
             return null;
         }
         ChunkPos cp = new ChunkPos(c.capital);
-        int x = cp.getMiddleBlockX();
-        int z = cp.getMiddleBlockZ();
+        int x = (cp.x * 16 + 8);
+        int z = (cp.z * 16 + 8);
         if (!world.hasChunkAt(new BlockPos(x, 64, z))) {
             return null;
         }

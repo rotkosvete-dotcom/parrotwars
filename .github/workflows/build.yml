@@ -74,16 +74,18 @@ jobs:
           sed -i "s/examplemod/parrotwars/g; s/com\.yourname\.modid/com.parrotwars/g; s/'modid'/'parrotwars-1.16.5'/g; s/mappings channel: '[a-z]*', version: '[^']*'/mappings channel: 'official', version: '1.16.5'/" build.gradle
       - name: Build
         shell: bash
-        run: ./gradlew build --stacktrace --console=plain 2>&1 | tee build.log
+        run: ./gradlew build --console=plain 2>&1 | tee build.log
       - name: Report error text
         if: failure()
         shell: bash
         run: |
-          m=$(tail -n 45 build.log | cut -c1-220)
+          grep -A2 -E "error:" build.log | cut -c1-210 | grep -v "^--$" | sed 's#/home/runner/work/[^/]*/[^/]*/src/main/java/com/parrotwars/##' > errors.txt || true
+          if [ ! -s errors.txt ]; then grep -A8 -E "What went wrong" build.log | cut -c1-210 > errors.txt || true; fi
+          m=$(head -c 3400 errors.txt)
           m="${m//'%'/'%25'}"
           m="${m//$'\n'/'%0A'}"
           m="${m//$'\r'/'%0D'}"
-          echo "::error title=BUILDLOG::${m:0:3500}"
+          echo "::error title=BUILDLOG::${m}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

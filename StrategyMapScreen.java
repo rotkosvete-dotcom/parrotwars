@@ -409,6 +409,7 @@ public class StrategyMapScreen extends Screen {
         }
 
         drawTerritory(ms);
+        drawMarkers(ms);
         drawUnits(ms);
         drawPlayer(ms);
 
@@ -491,27 +492,68 @@ public class StrategyMapScreen extends Screen {
         fill(ms, sx - 2, sy - 2, sx + 2, sy + 2, 0xFF00E676);
     }
 
+    private void drawMarkers(MatrixStack ms) {
+        for (CountrySyncPacket.View v : ClientHooks.views) {
+            int color = 0xFF000000 | (v.color & 0xFFFFFF);
+            for (long h : v.houses) {
+                BlockPos hp = BlockPos.of(h);
+                int sx = toScreenX(hp.getX() + 0.5D);
+                int sy = toScreenY(hp.getZ() + 0.5D);
+                if (inMap(sx, sy)) {
+                    fill(ms, sx - 2, sy - 2, sx + 2, sy + 2, 0xFF000000);
+                    fill(ms, sx - 1, sy - 1, sx + 1, sy + 1, 0xFFE0C080);
+                }
+            }
+            ChunkPos cp = new ChunkPos(v.capital);
+            int sx = toScreenX(cp.getMiddleBlockX());
+            int sy = toScreenY(cp.getMiddleBlockZ());
+            if (inMap(sx, sy)) {
+                fill(ms, sx - 4, sy - 4, sx + 4, sy + 4, 0xFFFFFFFF);
+                fill(ms, sx - 3, sy - 3, sx + 3, sy + 3, color);
+                int w = this.font.width(v.name);
+                int lx = MathHelper.clamp(sx - w / 2, mapX, Math.max(mapX, mapX + size - w));
+                int ly = Math.max(sy - 14, mapY);
+                drawString(ms, this.font, v.name, lx, ly, color);
+            }
+        }
+    }
+
     private void drawInfo(MatrixStack ms, int mouseX, int mouseY) {
         int bx = mapX + size + 12;
-        int y = 22 + 24 * 3 + 6 + 30 + 36 - 12;
+        int fieldLabelY = 22 + 24 * 3 + 6 + 30 + 36 - 12;
         drawString(ms, this.font, new TranslationTextComponent("screen.parrotwars.selected", selected.size()), bx, 4, 0xFFFFFF);
-        drawString(ms, this.font, new TranslationTextComponent("screen.parrotwars.country_name"), bx, y, 0xAAAAAA);
+        drawString(ms, this.font, new TranslationTextComponent("screen.parrotwars.country_name"), bx, fieldLabelY, 0xAAAAAA);
 
         String myCountry = "-";
         int chunks = 0;
+        int citizens = 0;
+        int approval = -1;
+        int houses = 0;
+        String enemyName = null;
         for (CountrySyncPacket.View v : ClientHooks.views) {
             if (v.mine) {
                 myCountry = v.name;
                 chunks = v.chunks.length;
+                citizens = v.citizens;
+                approval = v.approval;
+                houses = v.houses.length;
+            } else if (v.enemy) {
+                enemyName = v.name;
             }
         }
-        int infoY = this.height - 40;
+        int y = this.height - 76;
         drawString(ms, this.font, new TranslationTextComponent("screen.parrotwars.my_country", myCountry, chunks),
-                bx, infoY, 0xFFD700);
+                bx, y, 0xFFD700);
+        drawString(ms, this.font, new TranslationTextComponent("screen.parrotwars.citizens", houses, citizens,
+                approval < 0 ? "-" : approval + "%"), bx, y + 12, 0xCCFFCC);
+        if (enemyName != null) {
+            drawString(ms, this.font, new TranslationTextComponent("screen.parrotwars.enemy_country", enemyName),
+                    bx, y + 24, 0xFF8888);
+        }
         if (inMap(mouseX, mouseY)) {
             int wx = MathHelper.floor(toWorldX(mouseX));
             int wz = MathHelper.floor(toWorldZ(mouseY));
-            drawString(ms, this.font, "X: " + wx + "  Z: " + wz, bx, infoY + 14, 0xCCCCCC);
+            drawString(ms, this.font, "X: " + wx + "  Z: " + wz, bx, y + 38, 0xCCCCCC);
         }
         String hint = territoryMode
                 ? new TranslationTextComponent("screen.parrotwars.hint_territory").getString()

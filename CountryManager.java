@@ -3,25 +3,32 @@ package com.parrotwars.country;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.storage.WorldSavedData;
 
-/** Хранит страны игроков (чанки территории). Сохраняется вместе с миром. */
+/** Хранит страны (игроков и вражескую республику): чанки, дома, силу армии. Сохраняется с миром. */
 public class CountryManager extends WorldSavedData {
     public static final String NAME = "parrotwars_countries";
+    public static final UUID ENEMY_ID = new UUID(0x50494745L, 0x4F4E5F31L);
     public static final int MAX_CHUNKS = 60;
-    private static final int[] PALETTE = {0xE53935, 0x1E88E5, 0x43A047, 0xFDD835, 0x8E24AA, 0xFB8C00, 0x00ACC1, 0xD81B60};
+    private static final int[] PALETTE = {0x1E88E5, 0x43A047, 0xFDD835, 0x8E24AA, 0xFB8C00, 0x00ACC1, 0xD81B60, 0x6D4C41};
 
     public static class Country {
         public String name;
         public int color;
         public long capital;
+        public boolean npc = false;
+        public int strength = 0;
+        public long nextRaid = 0L;
         public final Set<Long> chunks = new HashSet<>();
+        public final Set<Long> houses = new HashSet<>();
     }
 
     private final Map<UUID, Country> countries = new HashMap<>();
@@ -66,6 +73,32 @@ public class CountryManager extends WorldSavedData {
         return c;
     }
 
+    /** Создать вражескую республику (один раз) далеко от первой страны игрока. */
+    public void ensureEnemy(int nearCx, int nearCz, Random rand, long time) {
+        if (countries.containsKey(ENEMY_ID)) {
+            return;
+        }
+        double angle = rand.nextDouble() * Math.PI * 2.0D;
+        int dist = 18 + rand.nextInt(8);
+        int cx = nearCx + (int) Math.round(Math.cos(angle) * dist);
+        int cz = nearCz + (int) Math.round(Math.sin(angle) * dist);
+        Country c = new Country();
+        c.name = "Голубиная Республика";
+        c.color = 0xD32F2F;
+        c.npc = true;
+        c.strength = 10;
+        c.nextRaid = time + 6000L;
+        c.capital = ChunkPos.asLong(cx, cz);
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                long ch = ChunkPos.asLong(cx + dx, cz + dz);
+                if (ownerOf(ch) == null) c.chunks.add(ch);
+            }
+        }
+        countries.put(ENEMY_ID, c);
+        setDirty();
+    }
+
     public boolean isAdjacent(Country c, int cx, int cz) {
         return c.chunks.contains(ChunkPos.asLong(cx + 1, cz)) || c.chunks.contains(ChunkPos.asLong(cx - 1, cz))
                 || c.chunks.contains(ChunkPos.asLong(cx, cz + 1)) || c.chunks.contains(ChunkPos.asLong(cx, cz - 1));
@@ -81,6 +114,11 @@ public class CountryManager extends WorldSavedData {
         setDirty();
     }
 
+    public void addHouse(Country c, BlockPos center) {
+        c.houses.add(center.asLong());
+        setDirty();
+    }
+
     @Override
     public void load(CompoundNBT tag) {
         countries.clear();
@@ -91,7 +129,11 @@ public class CountryManager extends WorldSavedData {
             c.name = t.getString("Name");
             c.color = t.getInt("Color");
             c.capital = t.getLong("Capital");
+            c.npc = t.getBoolean("Npc");
+            c.strength = t.getInt("Strength");
+            c.nextRaid = t.getLong("NextRaid");
             for (long ch : t.getLongArray("Chunks")) c.chunks.add(ch);
+            for (long h : t.getLongArray("Houses")) c.houses.add(h);
             countries.put(t.getUUID("Owner"), c);
         }
     }
@@ -100,18 +142,27 @@ public class CountryManager extends WorldSavedData {
     public CompoundNBT save(CompoundNBT tag) {
         ListNBT list = new ListNBT();
         for (Map.Entry<UUID, Country> e : countries.entrySet()) {
+            Country c = e.getValue();
             CompoundNBT t = new CompoundNBT();
             t.putUUID("Owner", e.getKey());
-            t.putString("Name", e.getValue().name);
-            t.putInt("Color", e.getValue().color);
-            t.putLong("Capital", e.getValue().capital);
-            long[] arr = new long[e.getValue().chunks.size()];
-            int i = 0;
-            for (long ch : e.getValue().chunks) arr[i++] = ch;
-            t.putLongArray("Chunks", arr);
+            t.putString("Name", c.name);
+            t.putInt("Color", c.color);
+            t.putLong("Capital", c.capital);
+            t.putBoolean("Npc", c.npc);
+            t.putInt("Strength", c.strength);
+            t.putLong("NextRaid", c.nextRaid);
+            t.putLongArray("Chunks", toArray(c.chunks));
+            t.putLongArray("Houses", toArray(c.houses));
             list.add(t);
         }
         tag.put("Countries", list);
         return tag;
+    }
+
+    public static long[] toArray(Set<Long> set) {
+        long[] arr = new long[set.size()];
+        int i = 0;
+        for (long v : set) arr[i++] = v;
+        return arr;
     }
 }

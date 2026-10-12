@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["PPP", "PFP", "PPP"],
+  "key": {
+    "P": { "item": "minecraft:oak_planks" },
+    "F": { "item": "minecraft:feather" }
+  },
+  "result": { "item": "parrotwars:parrot_house" }
+}

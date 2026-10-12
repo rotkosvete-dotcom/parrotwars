@@ -34,6 +34,7 @@ public abstract class WarVehicleEntity extends TameableEntity implements IRanged
 
     private Order order = Order.FOLLOW;
     private BlockPos moveTarget = null;
+    private BlockPos marchTarget = null;
 
     protected WarVehicleEntity(EntityType<? extends WarVehicleEntity> type, World world) {
         super(type, world);
@@ -74,6 +75,7 @@ public abstract class WarVehicleEntity extends TameableEntity implements IRanged
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new RangedAttackGoal(this, 0.9D, attackInterval(), attackRange()));
         if (isEnemyTeam()) {
+            this.goalSelector.addGoal(2, new MarchGoal(this, () -> marchTarget, () -> marchTarget = null));
             this.goalSelector.addGoal(3, new WaterAvoidingRandomWalkingGoal(this, 0.6D));
         } else {
             this.goalSelector.addGoal(2, new MoveOrderGoal(this));
@@ -85,7 +87,7 @@ public abstract class WarVehicleEntity extends TameableEntity implements IRanged
         if (isEnemyTeam()) {
             this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
             this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-            this.targetSelector.addGoal(3, new ScanTargetGoal(this, e -> e instanceof ArmyUnit, 28.0D));
+            this.targetSelector.addGoal(3, new ScanTargetGoal(this, Teams::isParrotSide, 28.0D));
         } else {
             this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
             this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
@@ -151,6 +153,10 @@ public abstract class WarVehicleEntity extends TameableEntity implements IRanged
     }
 
     // ---------- Приказы ----------
+
+    public void setMarchTarget(BlockPos pos) {
+        this.marchTarget = pos;
+    }
 
     public boolean isOwnedByPlayer(PlayerEntity player) {
         return this.isOwnedBy(player);

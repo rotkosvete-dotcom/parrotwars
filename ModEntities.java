@@ -52,4 +52,13 @@ public class ModEntities {
     public static final RegistryObject<EntityType<PigeonArtilleryEntity>> PIGEON_ARTILLERY = ENTITIES.register("pigeon_artillery",
             () -> EntityType.Builder.<PigeonArtilleryEntity>of(PigeonArtilleryEntity::new, EntityClassification.MONSTER)
                     .sized(1.3F, 1.2F).clientTrackingRange(10).build("pigeon_artillery"));
+
+    // ---- граждане ----
+    public static final RegistryObject<EntityType<ParrotCitizenEntity>> PARROT_CITIZEN = ENTITIES.register("parrot_citizen",
+            () -> EntityType.Builder.<ParrotCitizenEntity>of(ParrotCitizenEntity::new, EntityClassification.CREATURE)
+                    .sized(0.5F, 0.9F).clientTrackingRange(8).build("parrot_citizen"));
+
+    public static final RegistryObject<EntityType<PigeonCitizenEntity>> PIGEON_CITIZEN = ENTITIES.register("pigeon_citizen",
+            () -> EntityType.Builder.<PigeonCitizenEntity>of(PigeonCitizenEntity::new, EntityClassification.CREATURE)
+                    .sized(0.5F, 0.9F).clientTrackingRange(8).build("pigeon_citizen"));
 }

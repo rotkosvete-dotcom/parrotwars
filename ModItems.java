@@ -23,6 +23,9 @@ public class ModItems {
     public static final RegistryObject<Item> COMMAND_MAP = ITEMS.register("command_map",
             () -> new StrategyMapItem(new Item.Properties().tab(ItemGroup.TAB_MISC).stacksTo(1)));
 
+    public static final RegistryObject<Item> PARROT_HOUSE = ITEMS.register("parrot_house",
+            () -> new HouseItem(new Item.Properties().tab(ItemGroup.TAB_MISC)));
+
     public static final RegistryObject<Item> BARRACKS = ITEMS.register("barracks",
             () -> new BlockItem(ModBlocks.BARRACKS.get(), new Item.Properties().tab(ItemGroup.TAB_MISC)));
 
@@ -64,5 +67,13 @@ public class ModItems {
 
     public static final RegistryObject<Item> PIGEON_ARTILLERY_SPAWN_EGG = ITEMS.register("pigeon_artillery_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.PIGEON_ARTILLERY, 0x6B7280, 0xB45309,
+                    new Item.Properties().tab(ItemGroup.TAB_MISC)));
+
+    public static final RegistryObject<Item> PARROT_CITIZEN_SPAWN_EGG = ITEMS.register("parrot_citizen_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.PARROT_CITIZEN, 0x43A047, 0xFFFFFF,
+                    new Item.Properties().tab(ItemGroup.TAB_MISC)));
+
+    public static final RegistryObject<Item> PIGEON_CITIZEN_SPAWN_EGG = ITEMS.register("pigeon_citizen_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.PIGEON_CITIZEN, 0x9CA3AF, 0xFFFFFF,
                     new Item.Properties().tab(ItemGroup.TAB_MISC)));
 }

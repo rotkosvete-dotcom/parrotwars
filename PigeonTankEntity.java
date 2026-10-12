@@ -4,7 +4,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
 
 /** Враг: танк голубей. */
-public class PigeonTankEntity extends WarVehicleEntity implements EnemyUnit {
+public class PigeonTankEntity extends WarVehicleEntity implements EnemyUnit, Marcher {
     public PigeonTankEntity(EntityType<? extends PigeonTankEntity> type, World world) {
         super(type, world);
     }

@@ -11,10 +11,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /** Враг: голубь-солдат. Нападает на игроков и юнитов армии попугаев. */
-public class PigeonEntity extends ParrotEntity implements EnemyUnit {
+public class PigeonEntity extends ParrotEntity implements EnemyUnit, Marcher {
+    private BlockPos marchTarget = null;
 
     public PigeonEntity(EntityType<? extends PigeonEntity> type, World world) {
         super(type, world);
@@ -32,12 +34,22 @@ public class PigeonEntity extends ParrotEntity implements EnemyUnit {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new ReachMeleeGoal(this, 1.2D, true));
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomFlyingGoal(this, 1.0D));
-        this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.addGoal(2, new MarchGoal(this, () -> marchTarget, () -> marchTarget = null));
+        this.goalSelector.addGoal(3, new WaterAvoidingRandomFlyingGoal(this, 1.0D));
+        this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 8.0F));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.targetSelector.addGoal(3, new ScanTargetGoal(this, e -> e instanceof ArmyUnit, 20.0D));
+        this.targetSelector.addGoal(3, new ScanTargetGoal(this, Teams::isParrotSide, 20.0D));
+    }
+
+    @Override
+    public void setMarchTarget(BlockPos pos) {
+        this.marchTarget = pos;
+    }
+
+    protected BlockPos getMarchTarget() {
+        return marchTarget;
     }
 
     @Override

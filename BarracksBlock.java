@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -76,6 +77,9 @@ public class BarracksBlock extends Block {
             MobEntity unit = type.create(world);
             if (unit != null) {
                 unit.moveTo(pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, world.random.nextFloat() * 360.0F, 0.0F);
+                if (unit instanceof ParrotEntity) {
+                    ((ParrotEntity) unit).setVariant(world.random.nextInt(5));
+                }
                 if (unit instanceof TameableEntity) {
                     ((TameableEntity) unit).tame(player);
                 }

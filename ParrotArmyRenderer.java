@@ -6,13 +6,25 @@ import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
-/** Рендер на базе ванильной модели попугая: своя текстура и (по желанию) каска. */
+/**
+ * Рендер на базе ванильной модели попугая.
+ * fixedTexture == null -> скин зависит от вида попугая (5 видов).
+ */
 public class ParrotArmyRenderer extends MobRenderer<ParrotEntity, ArmyParrotModel> {
-    private final ResourceLocation texture;
+    public static final ResourceLocation[] SKINS = {
+            new ResourceLocation("textures/entity/parrot/parrot_red_blue.png"),
+            new ResourceLocation("textures/entity/parrot/parrot_blue.png"),
+            new ResourceLocation("textures/entity/parrot/parrot_green.png"),
+            new ResourceLocation("textures/entity/parrot/parrot_yellow_blue.png"),
+            new ResourceLocation("textures/entity/parrot/parrot_grey.png")
+    };
 
-    public ParrotArmyRenderer(EntityRendererManager manager, ResourceLocation texture, ResourceLocation helmetTexture) {
-        super(manager, new ArmyParrotModel(), 0.3F);
-        this.texture = texture;
+    private final ResourceLocation fixedTexture;
+
+    public ParrotArmyRenderer(EntityRendererManager manager, ResourceLocation fixedTexture,
+                              ResourceLocation helmetTexture, boolean pigeon) {
+        super(manager, new ArmyParrotModel(pigeon), 0.3F);
+        this.fixedTexture = fixedTexture;
         if (helmetTexture != null) {
             this.addLayer(new HelmetLayer(this, helmetTexture));
         }
@@ -20,7 +32,10 @@ public class ParrotArmyRenderer extends MobRenderer<ParrotEntity, ArmyParrotMode
 
     @Override
     public ResourceLocation getTextureLocation(ParrotEntity entity) {
-        return texture;
+        if (fixedTexture != null) {
+            return fixedTexture;
+        }
+        return SKINS[MathHelper.clamp(entity.getVariant(), 0, SKINS.length - 1)];
     }
 
     @Override

@@ -53,5 +53,21 @@
   "message.parrotwars.country_max": "Достигнут предел территории: %s чанков",
   "message.parrotwars.country_claimed": "Территория расширена: %s чанков",
   "message.parrotwars.country_unclaimed": "Чанк отпущен, осталось: %s",
-  "message.parrotwars.country_capital": "Столицу отпустить нельзя"
+  "message.parrotwars.country_capital": "Столицу отпустить нельзя",
+  "item.parrotwars.parrot_house": "Домик попугаев",
+  "item.parrotwars.parrot_citizen_spawn_egg": "Яйцо призыва: Гражданин-попугай",
+  "item.parrotwars.pigeon_citizen_spawn_egg": "Яйцо призыва: Гражданин-голубь",
+  "entity.parrotwars.parrot_citizen": "Гражданин-попугай",
+  "entity.parrotwars.pigeon_citizen": "Гражданин-голубь",
+  "screen.parrotwars.citizens": "Домов: %s, граждан: %s, одобрение: %s",
+  "screen.parrotwars.enemy_country": "Враг: %s",
+  "message.parrotwars.house_outside": "Дом можно ставить только на своей территории",
+  "message.parrotwars.house_space": "Нужна ровная свободная площадка 5x5 и 4 блока высоты",
+  "message.parrotwars.house_built": "Домик построен! Войти может только попугай",
+  "message.parrotwars.raid": "Голуби атакуют твою страну! Отряд: %s",
+  "message.parrotwars.citizen_mood": "Одобрение правителя: %s%%",
+  "message.parrotwars.citizen_defected": "Гражданин перешёл на твою сторону!",
+  "message.parrotwars.citizen_loyal": "Он ещё верен своему правителю",
+  "message.parrotwars.rally_support": "Митинг в твою поддержку! Народ даёт тебе силы",
+  "message.parrotwars.rally_protest": "Митинг протеста! Народ недоволен тобой"
 }

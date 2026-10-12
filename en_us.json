@@ -53,5 +53,21 @@
   "message.parrotwars.country_max": "Territory limit reached: %s chunks",
   "message.parrotwars.country_claimed": "Territory expanded: %s chunks",
   "message.parrotwars.country_unclaimed": "Chunk released, left: %s",
-  "message.parrotwars.country_capital": "You cannot release the capital"
+  "message.parrotwars.country_capital": "You cannot release the capital",
+  "item.parrotwars.parrot_house": "Parrot House",
+  "item.parrotwars.parrot_citizen_spawn_egg": "Parrot Citizen Spawn Egg",
+  "item.parrotwars.pigeon_citizen_spawn_egg": "Pigeon Citizen Spawn Egg",
+  "entity.parrotwars.parrot_citizen": "Parrot Citizen",
+  "entity.parrotwars.pigeon_citizen": "Pigeon Citizen",
+  "screen.parrotwars.citizens": "Houses: %s, citizens: %s, approval: %s",
+  "screen.parrotwars.enemy_country": "Enemy: %s",
+  "message.parrotwars.house_outside": "You can only build on your own territory",
+  "message.parrotwars.house_space": "Needs a free flat 5x5 area, 4 blocks high",
+  "message.parrotwars.house_built": "House built! Only a parrot can enter",
+  "message.parrotwars.raid": "Pigeons are attacking your country! Squad: %s",
+  "message.parrotwars.citizen_mood": "Approval of the ruler: %s%%",
+  "message.parrotwars.citizen_defected": "The citizen switched to your side!",
+  "message.parrotwars.citizen_loyal": "Still loyal to their ruler",
+  "message.parrotwars.rally_support": "A rally supports you! The people give you strength",
+  "message.parrotwars.rally_protest": "A protest rally! The people are unhappy with you"
 }

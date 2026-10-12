@@ -6,7 +6,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.ParrotEntity;
@@ -26,6 +28,16 @@ public class ParrotSoldierEntity extends ParrotEntity implements ArmyUnit {
 
     public enum Order { FOLLOW, HOLD, MOVE }
 
+    /** Виды: {здоровье, скорость, урон}. Индекс = вариант попугая (скин). */
+    private static final double[][] SPECIES = {
+            {1.0D, 1.0D, 1.3D},   // 0 алый ара: сильный удар
+            {1.5D, 0.9D, 1.0D},   // 1 гиацинтовый ара: живучий
+            {0.9D, 1.3D, 1.0D},   // 2 амазон: быстрый
+            {1.1D, 1.1D, 1.1D},   // 3 сине-жёлтый ара: универсал
+            {1.0D, 1.2D, 1.0D}    // 4 жако: проворный
+    };
+    private boolean speciesApplied = false;
+
     private Order order = Order.FOLLOW;
     private BlockPos moveTarget = null;
 
@@ -39,6 +51,33 @@ public class ParrotSoldierEntity extends ParrotEntity implements ArmyUnit {
                 .add(Attributes.FLYING_SPEED, 0.6D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D);
+    }
+
+    @Override
+    public void setVariant(int variant) {
+        super.setVariant(variant);
+        applySpecies(variant);
+    }
+
+    private void applySpecies(int variant) {
+        if (speciesApplied || this.level == null || this.level.isClientSide) {
+            return;
+        }
+        speciesApplied = true;
+        double[] m = SPECIES[MathHelper.clamp(variant, 0, SPECIES.length - 1)];
+        float ratio = this.getHealth() / this.getMaxHealth();
+        scaleAttribute(Attributes.MAX_HEALTH, m[0]);
+        scaleAttribute(Attributes.MOVEMENT_SPEED, m[1]);
+        scaleAttribute(Attributes.FLYING_SPEED, m[1]);
+        scaleAttribute(Attributes.ATTACK_DAMAGE, m[2]);
+        this.setHealth(this.getMaxHealth() * ratio);
+    }
+
+    private void scaleAttribute(Attribute attribute, double mult) {
+        ModifiableAttributeInstance inst = this.getAttribute(attribute);
+        if (inst != null) {
+            inst.setBaseValue(inst.getBaseValue() * mult);
+        }
     }
 
     // ---------- ИИ (подклассы переопределяют хуки) ----------

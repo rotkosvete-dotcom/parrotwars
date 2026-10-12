@@ -64,6 +64,7 @@ public class CountryActionPacket {
                         if (name.isEmpty()) name = "Parrotland";
                         if (name.length() > 24) name = name.substring(0, 24);
                         manager.found(player.getUUID(), name, here.x, here.z);
+                        manager.ensureEnemy(here.x, here.z, player.level.random, player.level.getGameTime());
                         msg(player, "message.parrotwars.country_founded", name);
                     }
                 }

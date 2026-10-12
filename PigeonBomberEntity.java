@@ -32,12 +32,13 @@ public class PigeonBomberEntity extends PigeonEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new BombRunGoal(this));
+        this.goalSelector.addGoal(2, new MarchGoal(this, () -> getMarchTarget(), () -> setMarchTarget(null)));
         this.goalSelector.addGoal(3, new WaterAvoidingRandomFlyingGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new LookAtGoal(this, PlayerEntity.class, 8.0F));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.targetSelector.addGoal(3, new ScanTargetGoal(this, e -> e instanceof ArmyUnit, 28.0D));
+        this.targetSelector.addGoal(3, new ScanTargetGoal(this, Teams::isParrotSide, 28.0D));
     }
 
     public void dropBomb() {

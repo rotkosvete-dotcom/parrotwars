@@ -55,6 +55,7 @@ public class ParrotFormRender {
         float bob = player.isOnGround() ? 0.0F : (MathHelper.sin(age * 0.6F) + 1.0F) * 0.45F;
 
         model.setupAnim(dummy, limbSwing, limbAmount, bob, netHeadYaw, pitch);
+        model.stabilize();
 
         MatrixStack ms = event.getMatrixStack();
         ms.pushPose();

@@ -16,6 +16,10 @@ public class ParrotFormEvents {
     @SubscribeEvent
     public static void onSize(EntityEvent.Size event) {
         Entity e = event.getEntity();
+        // Событие приходит и из конструктора игрока, когда список эффектов ещё не создан - пропускаем.
+        if (e == null || e.tickCount == 0) {
+            return;
+        }
         if (e instanceof PlayerEntity && ((PlayerEntity) e).hasEffect(ModEffects.PARROT_FORM.get())) {
             event.setNewSize(EntitySize.scalable(0.5F, 0.9F));
             event.setNewEyeHeight(0.7F);
